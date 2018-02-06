@@ -2,7 +2,7 @@ import errno
 import logging
 import os
 from argparse import Namespace
-from rosdistro import get_index, get_index_url, repository, get_distribution
+from rosdistro import get_index, get_index_url, repository, get_distribution, DEFAULT_INDEX_URL
 from rosdistro.source_repository_specification import SourceRepositorySpecification
 
 from mock import patch
@@ -46,7 +46,12 @@ class SourceRepositorySpecificationMock(SourceRepositorySpecification):
 
 
 def get_rosdistro(distroname):
-    index = get_index(get_index_url())
+    index_url = get_index_url()
+    index = get_index(index_url)
+
+    if index_url == DEFAULT_INDEX_URL:
+        logger.error('ROSDISTRO_INDEX_URL is set to the default (did you forget to source a workspace?)')
+        exit(1)
 
     # load rosdistro with patched SourceRepositorySpecification class
     with patch.object(repository, 'SourceRepositorySpecification', SourceRepositorySpecificationMock):
