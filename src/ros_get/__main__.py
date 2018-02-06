@@ -17,8 +17,9 @@ def main():
     subparser = subparsers.add_parser('update', help='update all packages in the workspace to the latest version')
     subparser.set_defaults(func='update')
 
-    subparser = subparsers.add_parser('list', help='list all installed packages')
-    subparser.set_defaults(func='list_installed')
+    subparser = subparsers.add_parser('list', help='List all available packages')
+    subparser.set_defaults(func='list_packages')
+    subparser.add_argument('--installed', action='store_true', help='Only list installed toplevel packages')
 
     subparser = subparsers.add_parser('remove', help='remove packages')
     subparser.set_defaults(func='remove')
@@ -102,7 +103,7 @@ def main():
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
-    from . import (install, update, list_installed, remove, create, switch, save, list_workspaces, locate, name,
+    from . import (install, update, list_packages, remove, create, switch, save, list_workspaces, locate, name,
                    rosdistro_url)
 
     # remove func from the namespace
@@ -113,7 +114,7 @@ def main():
     func = {
         'install': install,
         'update': update,
-        'list_installed': list_installed,
+        'list_packages': list_packages,
         'remove': remove,
         'create': create,
         'switch': switch,
